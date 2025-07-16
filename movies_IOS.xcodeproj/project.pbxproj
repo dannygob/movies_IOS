@@ -107,6 +107,9 @@
 			);
 			mainGroup = B209563F2E27EC1000BC9A55;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B20956752E27F43100BC9A55 /* XCRemoteSwiftPackageReference "SwiftGif" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B20956492E27EC1000BC9A55 /* Products */;
 			projectDirPath = "";
@@ -333,6 +336,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B20956752E27F43100BC9A55 /* XCRemoteSwiftPackageReference "SwiftGif" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swiftgif/SwiftGif.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = B20956402E27EC1000BC9A55 /* Project object */;
 }
