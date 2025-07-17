@@ -5,6 +5,7 @@ class MovieCell: UITableViewCell {
     let posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -79,30 +80,33 @@ class MovieCell: UITableViewCell {
         NSLayoutConstraint.activate([
             posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            posterImageView.widthAnchor.constraint(equalToConstant: 80),
-            posterImageView.heightAnchor.constraint(equalToConstant: 120),
+            posterImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.35),
+            posterImageView.heightAnchor.constraint(equalTo: posterImageView.widthAnchor, multiplier: 1.5), // Aspect ratio 3:2
             
+            contentView.bottomAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 10),
+
             titleLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 10),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            
+
             yearLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 10),
             yearLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
             yearLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            
+
             genreLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 10),
             genreLabel.topAnchor.constraint(equalTo: yearLabel.bottomAnchor, constant: 5),
             genreLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            
+
             ratedLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 10),
             ratedLabel.topAnchor.constraint(equalTo: genreLabel.bottomAnchor, constant: 5),
             ratedLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            
+
             rottenTomatoesLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 10),
             rottenTomatoesLabel.topAnchor.constraint(equalTo: ratedLabel.bottomAnchor, constant: 5),
             rottenTomatoesLabel.trailingAnchor.constraint(equalTo: ratingIconImageView.leadingAnchor, constant: -10),
-            
-            ratingIconImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            rottenTomatoesLabel.bottomAnchor.constraint(lessThanOrEqualTo: posterImageView.bottomAnchor),
+
+            ratingIconImageView.centerYAnchor.constraint(equalTo: rottenTomatoesLabel.centerYAnchor),
             ratingIconImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             ratingIconImageView.widthAnchor.constraint(equalToConstant: 30),
             ratingIconImageView.heightAnchor.constraint(equalToConstant: 30)

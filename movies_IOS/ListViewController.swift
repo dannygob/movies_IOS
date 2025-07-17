@@ -18,7 +18,22 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewDidLoad()
         
         view.backgroundColor = .black
-        tableView.backgroundColor = .black
+        
+        // Add watermark
+        let watermark = UIImageView(image: UIImage(named: "Placeholder"))
+        watermark.contentMode = .scaleAspectFit
+        watermark.alpha = 0.1
+        watermark.translatesAutoresizingMaskIntoConstraints = false
+        view.insertSubview(watermark, at: 0)
+        
+        NSLayoutConstraint.activate([
+            watermark.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            watermark.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            watermark.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            watermark.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.8)
+        ])
+        
+        tableView.backgroundColor = .clear
         
         // Style the search bar for a permanent dark theme
         searchBar.barStyle = .black
@@ -42,7 +57,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(MovieCell.self, forCellReuseIdentifier: "MovieCell")
-        tableView.rowHeight = 180
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 150
         
         // Cargar una cadena aleatoria de 3 letras al iniciar
         let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -82,20 +98,34 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         searchMovies(query: query)
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return movies.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
-        let movie = movies[indexPath.row]
+        let movie = movies[indexPath.section]
         cell.configure(with: movie)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedMovie = movies[indexPath.row]
+        let selectedMovie = movies[indexPath.section]
         performSegue(withIdentifier: "showMovieDetail", sender: selectedMovie)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 5 // Espacio entre celdas
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .darkGray
+        return headerView
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

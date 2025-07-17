@@ -27,23 +27,77 @@ class MovieDetailViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .black
-        titleLabel.textColor = .white
-        yearLabel.textColor = .white
-        plotLabel.textColor = .white
-        runtimeLabel.textColor = .white
-        directorLabel.textColor = .white
-        genreLabel.textColor = .white
-        countryLabel.textColor = .white
         
+        // Style the poster image view
+        posterImageView.backgroundColor = UIColor(red: 0.5, green: 0, blue: 0, alpha: 1.0) // Dark Red
+        posterImageView.layer.borderColor = UIColor.gray.cgColor
+        posterImageView.layer.borderWidth = 1
+        posterImageView.layer.cornerRadius = 8
+        posterImageView.clipsToBounds = true
+        
+        // Create a container view that acts as a full-screen border
+        let borderView = UIView()
+        borderView.translatesAutoresizingMaskIntoConstraints = false
+        borderView.backgroundColor = .clear
+        borderView.layer.borderColor = UIColor.gray.cgColor
+        borderView.layer.borderWidth = 1
+        borderView.layer.cornerRadius = 8
+        view.addSubview(borderView)
+
+        // Create a stack view to hold the detail labels
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = 8
+        view.addSubview(stackView)
+        
+        // --- REORDER & STYLE LABELS IN STACK VIEW ---
+        let orderedLabels: [UILabel] = [plotLabel, yearLabel, runtimeLabel, directorLabel, genreLabel, countryLabel, typeLabel, ratedLabel, rottenTomatoesLabel]
+        
+        orderedLabels.forEach { label in
+            label.removeFromSuperview() // Remove from storyboard hierarchy
+            label.textColor = .white
+            label.textAlignment = .left
+            label.numberOfLines = 0 // Allow text wrapping
+            stackView.addArrangedSubview(label)
+        }
+        
+        // Style and align the main title label
+        titleLabel.textColor = .white
+        titleLabel.textAlignment = .center
+        titleLabel.numberOfLines = 0
+        
+        // --- LAYOUT CONSTRAINTS ---
+        NSLayoutConstraint.activate([
+            // Border constraints to frame the entire screen
+            borderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            borderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            borderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            borderView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            
+            // Title label constraints (below poster, centered)
+            titleLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            // Stack view constraints (below title)
+            stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: borderView.bottomAnchor, constant: -20)
+        ])
+        
+        // --- LOAD DATA ---
         guard let imdbID = imdbID else { return }
         
         APIManager.shared.getMovieDetails(imdbID: imdbID) { [weak self] movieDetail in
             DispatchQueue.main.async {
                 if let movieDetail = movieDetail {
                     self?.titleLabel.text = movieDetail.Title
-                    self?.yearLabel.text = movieDetail.Year
-                    self?.plotLabel.text = movieDetail.Plot
-                    self?.runtimeLabel.text = movieDetail.Runtime
+                    self?.plotLabel.text = "Synopsis: \(movieDetail.Plot)"
+                    self?.yearLabel.text = "Year: \(movieDetail.Year)"
+                    self?.runtimeLabel.text = "Duration: \(movieDetail.Runtime)"
                     self?.directorLabel.text = "Director: \(movieDetail.Director)"
                     self?.genreLabel.text = "Genre: \(movieDetail.Genre)"
                     self?.countryLabel.text = "Country: \(movieDetail.Country)"
